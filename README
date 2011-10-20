@@ -1,0 +1,95 @@
+
+import csv, urllib
+
+def load_csv(url):
+  d = {}
+  fp = urllib.urlopen(url)
+  for row in csv.DictReader(fp):
+     key = row['date']
+     value = row['fish']
+
+     x = d.get(key, [])
+     x.append(value)
+     d[key] = x
+
+  return d
+
+def make_dates_dict(fish_d):
+    dates_d = {}
+    for key in fish_d:
+        for fish in fish_d[key]:
+            dates_d[fish] = []
+    for fish in dates_d:
+        for key in fish_d:
+            for fishname in fish_d[key]:
+                if fishname == fish:
+                    dates_d[fish].append(key)
+    dates_d[fish] = set(dates_d[fish])
+  
+  # write code HERE to fill in dates_d
+
+  # note, fish_d is a dictionary created by load_csv where the
+  # KEYS are dates and the VALUES are lists of fish.  from
+  # csv.DictReader.  so, fish_d[date] is a list of fish from that
+  # day.
+  #
+  # the return value, 'dates_d', should be a dictionary where the
+  # KEYS are fish and the VALUES are lists of dates.
+
+    return dates_d
+
+def get_fishes_by_date(fish_d, date):
+  fishlist = fish_d.get(date)
+  # write code HERE to fill in fishlist
+
+  return fishlist
+
+def get_dates_by_fish(dates_d, fish):
+    dateslist = dates_d.get(fish)
+  # write code HERE to fill in dateslist
+
+  # note, dates_d is a dictionary created by make_dates_dict; see the
+  # comment there for more info.
+
+    return dateslist
+
+
+# this code is outside the functions and USES the functions to
+# load data and ask questions of the data.
+
+def get_fishes_by_datelist(fish_d, datelist):
+    fish_on_datelist = []
+    for date in datelist:
+        for key in fish_d:
+            if key == date:
+                for fish in fish_d[key]:
+                    fish_on_datelist.append(fish)
+    return fish_on_datelist
+    
+
+def get_dates_by_fishlist(dates_d, fishlist):
+    dates_on_fishlist = []
+    for fish in fishlist:
+        for key in fish_d:
+            for fishy in fish_d[key]:
+                if fish == fishy:
+                    dates_on_fishlist.append(key)
+    dates_on_fishlist_set = set(dates_on_fishlist)
+    return dates_on_fishlist_set
+
+fish_d = load_csv('https://raw.github.com/ctb/edda/master/doc/beacon-2011/tutorial5/fishies.csv')
+dates_d = make_dates_dict(fish_d)
+
+#print get_fishes_by_date(fish_d, '12/5')
+#print get_dates_by_fish(dates_d, 'cod')
+
+
+datelist = ['11/3', '11/4']
+fishlist = ['cod', 'sole']
+henry = get_fishes_by_datelist(fish_d, datelist)
+frank = get_dates_by_fishlist(dates_d, fishlist)
+print frank
+
+
+
+#    
